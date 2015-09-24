@@ -4,7 +4,9 @@
 #include "mainwindow.h"
 #include "ui_gamePlay.h"
 
+#include <QDebug>
 #include <QDialog>
+#include <QMessageBox>
 
 enum Choices {
 	rock,
@@ -17,10 +19,9 @@ class GamePlay : public QDialog
 	Q_OBJECT
 
 public:
-	explicit GamePlay(QWidget *parent = 0);
+	explicit GamePlay(QWidget *parent=0);
 	~GamePlay();
 
-	void generateResult();
 	Choices getUserChoice();
 	Choices generateComputerChoice();
 	bool gameLogic(Choices, Choices);
@@ -28,11 +29,14 @@ public:
 private slots:
 	void goBack();
 	void showResult();
+	void selectionMade();
 
 private:
-	QRadioButton *rockButton, *paperButton, *scissorButton;
-	QPushButton *confirmButton, *backButton;
-	GamePlay *gpd;
+	QWidget *gameWindow;
+	QMessageBox *outcomeWindow;
 	Choices userChoice, computerChoice;
+	QPushButton *confirmButton, *backButton;
+	QRadioButton *rockButton, *paperButton, *scissorButton;
 };
+
 #endif // GAMEPLAY_H

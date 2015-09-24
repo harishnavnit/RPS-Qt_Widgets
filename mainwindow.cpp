@@ -22,11 +22,7 @@ MainWindow::~MainWindow()
 /* Load the gameplay dialog
  * Hide the main window
  */
-bool MainWindow::playButtonClicked()
+void MainWindow::playButtonClicked()
 {
-	int r_val;
-	QDialog *g = new GamePlay(this);
-	r_val = g->exec();
-
-	return (r_val) ? true : false;
+	new GamePlay();
 }

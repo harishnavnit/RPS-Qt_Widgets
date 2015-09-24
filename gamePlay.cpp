@@ -4,47 +4,69 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <QDebug>
-#include <QMessageBox>
-
 GamePlay::GamePlay(QWidget *parent) :
 	QDialog(parent),
-	gpd(new GamePlay)
+	backButton(new QPushButton("Back"))  , confirmButton(new QPushButton("Confirm")),
+	rockButton(new QRadioButton("Rock")) , paperButton(new QRadioButton("Paper")), scissorButton(new QRadioButton("Scissors"))
 {
-	gpd->setWindowTitle("Rock-Paper-Scissors");
-	gpd->setVisible(true);
+	setWindowTitle("Rock-Paper-Scissors");
 
-	connect(gpd->backButton,    SIGNAL(clicked()), this, SLOT(goBack()));
-	connect(gpd->confirmButton, SIGNAL(clicked()), this, SLOT(showResult()));
+	gameWindow = new QWidget;
+	QVBoxLayout *mainLayout = new QVBoxLayout;
+	QVBoxLayout *vLayout    = new QVBoxLayout;
+	QHBoxLayout *hLayout    = new QHBoxLayout;
+
+	hLayout->addWidget(backButton);
+	hLayout->addWidget(confirmButton);
+	vLayout->addWidget(rockButton);
+	vLayout->addWidget(paperButton);
+	vLayout->addWidget(scissorButton);
+
+	mainLayout->addLayout(vLayout);
+	mainLayout->addLayout(hLayout);
+	gameWindow->setLayout(mainLayout);
+	gameWindow->show();
+
+	connect(backButton,    SIGNAL(clicked()), this, SLOT(goBack()));
+	connect(confirmButton, SIGNAL(clicked()), this, SLOT(showResult()));
+	connect(rockButton,    SIGNAL(toggled(bool)), this, SLOT(selectionMade()));
+	connect(paperButton,   SIGNAL(toggled(bool)), this, SLOT(selectionMade()));
+	connect(scissorButton, SIGNAL(toggled(bool)), this, SLOT(selectionMade()));
 }
 
 GamePlay::~GamePlay()
 {
-	delete gpd;
+	delete gameWindow;
 }
 
 /* Private slots */
 void GamePlay::goBack()
 {
-	gpd->setVisible(false);
+	gameWindow->close();
 }
 
 void GamePlay::showResult()
 {
-	Choices user	 = gpd->getUserChoice();
-	Choices computer = gpd->generateComputerChoice();
-	bool win	 = gpd->gameLogic(user, computer);
+	Choices user	 = getUserChoice();
+	Choices computer = generateComputerChoice();
+	bool win	 = gameLogic(user, computer);
 
-	QMessageBox *outcome = new QMessageBox(this);
+	outcomeWindow = new QMessageBox();
+	gameWindow->close();
 	if (win) {
-		outcome->setWindowTitle("Congratulations");
-		outcome->setText("You Win !");
+		outcomeWindow->setWindowTitle("Congratulations");
+		outcomeWindow->setText("You Win !");
 	} else {
-		outcome->setWindowTitle("Commisserations");
-		outcome->setText("You Lose. Better luck next time.");
+		outcomeWindow->setWindowTitle("Commisserations");
+		outcomeWindow->setText("You Lose. Better luck next time.");
 	}
+	outcomeWindow->show();
 }
 
+void GamePlay::selectionMade()
+{
+	getUserChoice();
+}
 /* Public methods */
 Choices GamePlay::getUserChoice()
 {

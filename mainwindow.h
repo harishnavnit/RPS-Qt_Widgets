@@ -19,7 +19,7 @@ public:
 	~MainWindow();
 
 private slots :
-	bool playButtonClicked();
+	void playButtonClicked();
 
 private:
 	Ui::MainWindow *ui;
