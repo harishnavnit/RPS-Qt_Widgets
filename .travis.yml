@@ -1,9 +1,6 @@
 dist: trusty
 os: linux
 
-env:
-    - QT_VERSION=5
-
 language: cpp
 
-install: qmake && make
+script: qmake && make
